@@ -46,7 +46,9 @@ public class EventServiceImpl implements EventService{
     public List<EventDto> fetchEventList() {
 
         List<Event> events = eventRepository.findAll();
-        List<EventDto> eventDtos = events.stream().map(event -> mapToDto(event)).collect(Collectors.toList());
+        List<EventDto> eventDtos = events.stream()
+                .map(event -> mapToDto(event))
+                .collect(Collectors.toList());
         return eventDtos;
     }
 

@@ -1,17 +1,16 @@
 package com.example.eventBridge_backend.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 
 @Entity
-@Data
+@Getter
+@Setter
+
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
+
 public class Ticket {
 
     @Id
@@ -28,7 +27,7 @@ public class Ticket {
 
     @ManyToOne(
             cascade = CascadeType.ALL,
-            fetch = FetchType.LAZY
+            fetch = FetchType.EAGER
     )
     @JoinColumn(
             name = "event_id",
@@ -39,7 +38,7 @@ public class Ticket {
 
    @ManyToOne(
            cascade = CascadeType.ALL,
-           fetch = FetchType.LAZY
+           fetch = FetchType.EAGER
    )
    @JoinColumn(
            name = "person_id",

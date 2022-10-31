@@ -59,6 +59,7 @@ public class EventController {
     @DeleteMapping("/events/{id}")
     public void deleteEventById(@PathVariable("id") Long eventId){
         eventService.deleteEventById(eventId);
+        LOGGER.info("delete action successful");
     }
 
     @GetMapping("/events/bycategory/{category}")

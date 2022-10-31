@@ -1,9 +1,11 @@
 package com.example.eventBridge_backend.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import lombok.*;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,8 +14,8 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
-public class Event {
+
+public class Event{
 
     @Id
     @SequenceGenerator(
@@ -28,7 +30,7 @@ public class Event {
     private Long eventID;
 
     @ManyToOne(
-            cascade = CascadeType.ALL,
+//            cascade = CascadeType.ALL,
             fetch = FetchType.EAGER
     )
     @JoinColumn(
@@ -54,6 +56,6 @@ public class Event {
     private Categories categories;
 
 
-    @OneToMany(mappedBy = "event", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Ticket> tickets = new ArrayList<>();
+//    @OneToMany(mappedBy = "event",  orphanRemoval = true)
+//    private List<Ticket> tickets = new ArrayList<>();
 }

@@ -1,15 +1,14 @@
 package com.example.eventBridge_backend.service;
 
-import com.example.eventBridge_backend.entity.Categories;
-import com.example.eventBridge_backend.entity.Event;
-import com.example.eventBridge_backend.entity.Person;
-import com.example.eventBridge_backend.entity.Ticket;
+import com.example.eventBridge_backend.entity.*;
 import com.example.eventBridge_backend.error.EntityNotFoundException;
 import com.example.eventBridge_backend.payload.TicketDto;
 import com.example.eventBridge_backend.repository.EventRepository;
 import com.example.eventBridge_backend.repository.TicketRepository;
 import com.example.eventBridge_backend.repository.UserRepository;
 import org.modelmapper.ModelMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -28,6 +27,9 @@ public class TicketServiceImpl implements TicketService{
     @Autowired
     private UserRepository userRepository;
 
+
+
+    @Autowired
     private ModelMapper mapper;
 
     @Override
@@ -35,8 +37,10 @@ public class TicketServiceImpl implements TicketService{
     {
         Ticket ticket1 = mapToEntity(ticketDto);
 
-        Event event = eventRepository.findById(eventId).orElseThrow(() -> new RuntimeException("event not found"));
-        Person person = userRepository.findById(personId).orElseThrow(() -> new RuntimeException("person not found"));
+        Event event = eventRepository.findById(eventId).orElseThrow(() -> new javax.persistence.EntityNotFoundException("event not found"));
+        LoggerFactory.getLogger("event found").info("event found: " + event.getEventName());
+        Person person = userRepository.findById(personId).orElseThrow(() -> new javax.persistence.EntityNotFoundException("person not found"));
+        LoggerFactory.getLogger("event found").info("event found: " + person.getFirstName());
         ticket1.setEvent(event);
         ticket1.setCustomer(person);
         Ticket newTicket = ticketRepository.save(ticket1);
@@ -49,9 +53,14 @@ public class TicketServiceImpl implements TicketService{
     @Override
     public List<TicketDto> fetchTicketList() {
         List<Ticket> tickets = ticketRepository.findAll();
-        List<TicketDto> ticketDtos = tickets.stream().map(ticket -> mapToDto(ticket)).collect(Collectors.toList());
+
+        List<TicketDto> ticketDtos = tickets.stream()
+                .map(ticket -> mapToDto(ticket))
+                .collect(Collectors.toList());
+        LoggerFactory.getLogger("ticketList found").info("event found: " + ticketDtos.get(0));
 
         return ticketDtos;
+//
     }
 
     @Override
@@ -87,18 +96,32 @@ public class TicketServiceImpl implements TicketService{
 
         return ticketDtos;
     }
+//
+//    @Override
+//    public List<TicketDto> fetchTicketsByCategory(Categories category) {
+//        List<Ticket> tickets = ticketRepository.findTicketsByEventCategories(category);
+//
+//        List<TicketDto> ticketDtos = tickets.stream().map(ticket -> mapToDto(ticket)).collect(Collectors.toList());
+//
+//        return ticketDtos;
+//    }
 
     @Override
-    public List<TicketDto> fetchTicketsByCategory(Categories category) {
-        List<Ticket> tickets = ticketRepository.findTicketsByEventCategories(category);
+    public TicketDto updateTicket(TicketDto ticketDto, Long eventId, Long id) {
 
-        List<TicketDto> ticketDtos = tickets.stream().map(ticket -> mapToDto(ticket)).collect(Collectors.toList());
+        Event eventdb = eventRepository.findById(eventId).orElseThrow(
+                () -> new RuntimeException("cant find event to update"));
 
-        return ticketDtos;
+        Ticket ticket = ticketRepository.findById(id).orElseThrow(()-> new RuntimeException());
+
+//        Person person = userRepository.findById();
+        return null;
     }
 
     public TicketDto mapToDto(Ticket ticket){
+
         TicketDto ticketDto = mapper.map(ticket, TicketDto.class);
+        LoggerFactory.getLogger("ticket found").info("event found: " + ticketDto.toString());
         return ticketDto;
     }
 

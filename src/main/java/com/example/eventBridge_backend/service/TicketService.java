@@ -22,5 +22,7 @@ public interface TicketService {
 
     List<TicketDto> fetchTicketsByEventId(Long eventId);
 
-    public List<TicketDto> fetchTicketsByCategory(Categories categoryId);
+//    public List<TicketDto> fetchTicketsByCategory(Categories categoryId);
+
+    TicketDto updateTicket(TicketDto ticketDto, Long eventId, Long id);
 }
