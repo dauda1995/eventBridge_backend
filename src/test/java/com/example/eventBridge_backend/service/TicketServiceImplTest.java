@@ -19,8 +19,6 @@ class TicketServiceImplTest {
     @Test
     void saveTicket() {
 
-        Person person = Person.builder()
-                .build();
 
     }
 }

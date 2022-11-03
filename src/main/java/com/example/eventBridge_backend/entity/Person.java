@@ -1,12 +1,11 @@
 package com.example.eventBridge_backend.entity;
 
 import lombok.*;
-import org.springframework.core.serializer.Serializer;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -15,17 +14,15 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 
+@Table(name = "users", uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"email"}),
+        @UniqueConstraint(columnNames = {"firstName"})
+})
 public class Person {
 
     @Id
-    @SequenceGenerator(
-            name="person_sequence",
-            sequenceName = "person_sequence",
-            allocationSize = 1
-    )
-    @GeneratedValue(
-            strategy = GenerationType.SEQUENCE,
-            generator = "person_sequence"
+   @GeneratedValue(
+            strategy = GenerationType.IDENTITY
     )
     private Long personId;
 
@@ -35,6 +32,12 @@ public class Person {
     private String lastName;
 
     private String password;
+
+    @ManyToMany(fetch = FetchType.EAGER ,cascade = CascadeType.ALL)
+    @JoinTable(name = "user_roles",
+                joinColumns =@JoinColumn(name = "user_id", referencedColumnName = "personId"),
+                inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
+    private Set<Role> roles;
 
 
 //    @OneToMany(mappedBy = "customer", orphanRemoval = true)

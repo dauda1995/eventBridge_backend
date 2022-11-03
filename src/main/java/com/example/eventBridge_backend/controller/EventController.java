@@ -11,11 +11,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-//@CrossOrigin(origins = Config.HOST)
+@CrossOrigin(origins = Config.HOST)
 @RequestMapping("/api/")
 @RestController
 public class EventController {
@@ -25,6 +26,7 @@ public class EventController {
 
     private final Logger LOGGER = LoggerFactory.getLogger(EventController.class);
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/organiser/{organiserId}/events")
 //    @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<EventDto> saveEvent(@RequestBody EventDto eventDto, @PathVariable("organiserId") Long organiserId){
@@ -37,6 +39,7 @@ public class EventController {
         return ResponseEntity.ok(eventService.fetchEventList());
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/events/{eventId}/{personId}")
     public ResponseEntity<EventDto> updateEvent(@PathVariable("eventId") Long eventId,
                                                 @PathVariable("personId") Long organiserId,
@@ -56,6 +59,7 @@ public class EventController {
         return ResponseEntity.ok(eventService.fetchEventByOrganiserId(organiser));
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/events/{id}")
     public void deleteEventById(@PathVariable("id") Long eventId){
         eventService.deleteEventById(eventId);

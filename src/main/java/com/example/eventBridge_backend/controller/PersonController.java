@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -24,6 +25,7 @@ public class PersonController {
     private UserService userService;
 
     private final Logger LOGGER = LoggerFactory.getLogger(PersonController.class);
+
 
     @PostMapping("/users")
     public ResponseEntity<Person> savePerson(@Valid @RequestBody Person person){
