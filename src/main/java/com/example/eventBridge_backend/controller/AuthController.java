@@ -11,6 +11,7 @@ import com.example.eventBridge_backend.payload.UserResponse;
 import com.example.eventBridge_backend.repository.RoleRepository;
 import com.example.eventBridge_backend.repository.UserRepository;
 import com.example.eventBridge_backend.security.JwtTokenProvider;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -50,7 +51,7 @@ public class AuthController {
 
 //    @ApiOperation(value = "REST API to Register or Signup user to Blog app")
     @PostMapping("/signin")
-    public ResponseEntity<JWTAuthResponse> authenticateUser(@RequestParam(value = "params", required = false) String pass, LoginDto loginDto){
+    public ResponseEntity<UserResponse> authenticateUser(@RequestParam(value = "params", required = false) String pass, LoginDto loginDto){
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
                 loginDto.getFirstNameOrEmail(), loginDto.getPassword()));
 
@@ -59,7 +60,16 @@ public class AuthController {
         // get token form tokenProvider
         String token = tokenProvider.generateToken(authentication);
 
-        return ResponseEntity.ok(new JWTAuthResponse(token));
+        String toks = tokenProvider.getUsernameFromJWT(token);
+        LoggerFactory.getLogger("e").info(toks);
+        UserResponse userResponse = new UserResponse();
+
+        Optional<Person> person = userRepository.findByFirstName(toks);
+        userResponse.setId(person.get().getPersonId());
+        userResponse.setUsername(person.get().getFirstName());
+        userResponse.setToken(token);
+
+        return ResponseEntity.ok(userResponse);
     }
 
 //    @ApiOperation(value = "REST API to Signin or Login user to Blog app")
@@ -106,7 +116,7 @@ public class AuthController {
     }
 
     @PostMapping("/getDetails")
-    public ResponseEntity<UserResponse> getUserDetail(@RequestParam String token){
+    public ResponseEntity<UserResponse> getUserDetail( String token){
         UserResponse userResponse = new UserResponse();
 
         String toks = tokenProvider.getUsernameFromJWT(token);

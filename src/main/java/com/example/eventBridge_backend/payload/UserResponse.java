@@ -6,4 +6,5 @@ import lombok.Data;
 public class UserResponse {
     private Long Id;
     private String username;
+    private String token;
 }
