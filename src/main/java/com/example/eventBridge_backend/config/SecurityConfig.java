@@ -45,6 +45,7 @@ public class SecurityConfig {
     protected SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf().disable()
+                .cors().disable()
                 .exceptionHandling()
                 .authenticationEntryPoint(authenticationEntryPoint)
                 .and()
@@ -52,7 +53,6 @@ public class SecurityConfig {
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .logout()
-
                 .and()
                 .authorizeRequests((authorize) -> authorize
                         .antMatchers(HttpMethod.GET, "/api/v1/**").permitAll()
@@ -62,6 +62,7 @@ public class SecurityConfig {
                         .antMatchers("/swagger-resources/**").permitAll()
                         .antMatchers("/swagger-ui.html").permitAll()
                         .antMatchers("/webjars/**").permitAll()
+                        .antMatchers("/api/**").permitAll()
                         .anyRequest()
                         .authenticated()
 

@@ -1,5 +1,6 @@
 package com.example.eventBridge_backend.controller;
 
+import com.example.eventBridge_backend.config.Config;
 import com.example.eventBridge_backend.entity.Categories;
 import com.example.eventBridge_backend.entity.Ticket;
 import com.example.eventBridge_backend.error.EntityNotFoundException;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
 
+@CrossOrigin(origins = Config.HOST)
 @RestController
 @RequestMapping("/api/")
 public class TicketController {
@@ -24,7 +26,7 @@ public class TicketController {
 
     private final Logger LOGGER = LoggerFactory.getLogger(TicketController.class);
 
-    @PostMapping("/events/{eventId}/{personId}/tickets")
+    @PostMapping("/tickets/save/{eventId}/{personId}/tickets")
     public ResponseEntity<TicketDto> createTicket(@PathVariable(value= "eventId") Long eventId,
                                                   @PathVariable("personId") Long personId,
                                                   @RequestBody TicketDto ticketDto){
@@ -70,6 +72,19 @@ public class TicketController {
     public ResponseEntity<TicketDto> updateTicket(@RequestBody TicketDto ticketDto,@PathVariable("eventId") Long eventId, @PathVariable("id") Long id){
         return new ResponseEntity<>(ticketService.updateTicket(ticketDto, eventId, id), HttpStatus.OK);
     }
+
+    @GetMapping("/tickets/getbyIds/{personid}/{eventid}")
+    public ResponseEntity<TicketDto> getTicketByEventAndPersonId(@PathVariable("personid") Long personId, @PathVariable("eventid") Long eventId) throws EntityNotFoundException {
+        try {
+            return new ResponseEntity<TicketDto>(ticketService.fetchTicketByEventIdAndCustomerId(eventId, personId),HttpStatus.OK);
+        } catch (EntityNotFoundException e) {
+
+           return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+//            throw new EntityNotFoundException();
+        }
+
+    }
+
 
 
 

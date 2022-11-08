@@ -1,5 +1,6 @@
 package com.example.eventBridge_backend.service;
 
+import com.example.eventBridge_backend.entity.Address;
 import com.example.eventBridge_backend.entity.Event;
 import com.example.eventBridge_backend.entity.Person;
 import com.example.eventBridge_backend.entity.Ticket;
@@ -10,6 +11,7 @@ import com.example.eventBridge_backend.payload.TicketDto;
 import com.example.eventBridge_backend.repository.EventRepository;
 import com.example.eventBridge_backend.repository.UserRepository;
 import org.modelmapper.ModelMapper;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -33,10 +35,21 @@ public class EventServiceImpl implements EventService{
     @Override
     public EventDto saveEvent(EventDto eventDto, Long organiserId) {
 
-        Event event = mapToEntity(eventDto);
+
+//        Event event = mapToEntity(eventDto);
+        LoggerFactory.getLogger("df").info("dto:" + String.valueOf(eventDto));
+        Event event1 = mapToEntity(eventDto);
+
+        LoggerFactory.getLogger("dff").info("entity" + String.valueOf(event1));
+
         Person person = userRepository.findById(organiserId).orElseThrow(() -> new RuntimeException("user not found"));
-        event.setOrganiser(person);
-        Event newEvent = eventRepository.save(event);
+        Person organiser = Person.builder()
+                .personId(person.getPersonId()).email(person.getEmail())
+                .firstName(person.getFirstName())
+                .lastName(person.getLastName()).build();
+        event1.setOrganiser(organiser);
+
+        Event newEvent = eventRepository.save(event1);
 
         EventDto eventResponse = mapToDto(newEvent);
         return eventResponse;

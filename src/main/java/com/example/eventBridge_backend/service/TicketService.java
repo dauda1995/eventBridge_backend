@@ -22,6 +22,8 @@ public interface TicketService {
 
     List<TicketDto> fetchTicketsByEventId(Long eventId);
 
+    TicketDto fetchTicketByEventIdAndCustomerId(Long eventId, Long customerId) throws EntityNotFoundException;
+
 //    public List<TicketDto> fetchTicketsByCategory(Categories categoryId);
 
     TicketDto updateTicket(TicketDto ticketDto, Long eventId, Long id);

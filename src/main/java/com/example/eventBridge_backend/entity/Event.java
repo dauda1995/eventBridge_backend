@@ -39,6 +39,7 @@ public class Event{
     )
     private Person organiser;
 
+    private String organiserName;
     private String eventName;
     private String startDate;
     private String startTime;

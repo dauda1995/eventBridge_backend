@@ -1,5 +1,6 @@
 package com.example.eventBridge_backend.controller;
 
+import com.example.eventBridge_backend.config.Config;
 import com.example.eventBridge_backend.entity.Person;
 import com.example.eventBridge_backend.error.EntityNotFoundException;
 import com.example.eventBridge_backend.payload.PersonDto;
@@ -16,7 +17,7 @@ import javax.validation.Valid;
 import java.util.List;
 
 //add url of frontend
-//@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = Config.HOST)
 @RequestMapping("/api/")
 @RestController
 public class PersonController {

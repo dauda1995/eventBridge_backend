@@ -94,6 +94,18 @@ public class TicketServiceImpl implements TicketService{
 
         return ticketDtos;
     }
+
+    @Override
+    public TicketDto fetchTicketByEventIdAndCustomerId(Long eventId, Long customerId) throws EntityNotFoundException {
+        Optional<Ticket> ticket = Optional.ofNullable(ticketRepository.findTicketByCustomer_PersonIdAndEvent_EventID(eventId, customerId));
+        if(ticket.isEmpty()) {
+            throw new EntityNotFoundException();
+        }else {
+
+            TicketDto ticketDto = mapToDto(ticket.get());
+            return ticketDto;
+        }
+    }
 //
 //    @Override
 //    public List<TicketDto> fetchTicketsByCategory(Categories category) {

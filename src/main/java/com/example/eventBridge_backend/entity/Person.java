@@ -13,6 +13,7 @@ import java.util.Set;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 
 @Table(name = "users", uniqueConstraints = {
         @UniqueConstraint(columnNames = {"email"}),

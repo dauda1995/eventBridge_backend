@@ -8,6 +8,7 @@ import javax.persistence.Embeddable;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 
 public class Categories {
 
