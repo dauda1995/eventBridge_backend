@@ -29,7 +29,7 @@ import java.util.Collections;
 import java.util.Optional;
 
 //@Api(value = "Auth controller exposes siginin and signup REST APIs")
-@CrossOrigin(origins = Config.HOST)
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/api/v1/auth")
 public class AuthController {
@@ -51,11 +51,12 @@ public class AuthController {
 
 //    @ApiOperation(value = "REST API to Register or Signup user to Blog app")
     @PostMapping("/signin")
-    public ResponseEntity<UserResponse> authenticateUser(@RequestParam(value = "params", required = false) String pass, LoginDto loginDto){
+    public ResponseEntity<UserResponse> authenticateUser(LoginDto loginDto){
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
                 loginDto.getFirstNameOrEmail(), loginDto.getPassword()));
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
+
 
         // get token form tokenProvider
         String token = tokenProvider.generateToken(authentication);
@@ -64,7 +65,7 @@ public class AuthController {
         LoggerFactory.getLogger("e").info(toks);
         UserResponse userResponse = new UserResponse();
 
-        Optional<Person> person = userRepository.findByFirstName(toks);
+        Optional<Person> person = userRepository.findByEmail(toks);
         userResponse.setId(person.get().getPersonId());
         userResponse.setUsername(person.get().getFirstName());
         userResponse.setToken(token);
@@ -74,7 +75,7 @@ public class AuthController {
 
 //    @ApiOperation(value = "REST API to Signin or Login user to Blog app")
     @PostMapping("/signup")
-    public ResponseEntity<?> registerUser(SignUpDto signUpDto){
+    public ResponseEntity<?> registerUser( SignUpDto signUpDto){
 
         // add check for username exists in a DB
         if(userRepository.existsByFirstName(signUpDto.getFirstName())){

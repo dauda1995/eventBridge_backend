@@ -74,4 +74,9 @@ public class EventController {
         return ResponseEntity.ok(eventService.fetchEventByCategory(category));
     }
 
+    @GetMapping("/events/byorganiserandCategory/{organiserId}/{category}")
+    public ResponseEntity<List<EventDto>> fetchEventByOrganiserAndCategory(@PathVariable(value = "organiserId",  required = false) Long organiser, @PathVariable(value = "category",  required = false) String category){
+        return ResponseEntity.ok(eventService.fetchEventByPersonAndCategory(organiser, category));
+    }
+
 }

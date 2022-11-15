@@ -21,4 +21,6 @@ public interface EventService {
 
     List<EventDto> fetchEventByCategory(String category);
 
+    List<EventDto> fetchEventByPersonAndCategory(Long organiser, String preference);
+
 }

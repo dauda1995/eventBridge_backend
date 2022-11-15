@@ -1,8 +1,7 @@
 package com.example.eventBridge_backend.controller;
 
 import com.example.eventBridge_backend.config.Config;
-import com.example.eventBridge_backend.entity.Categories;
-import com.example.eventBridge_backend.entity.Ticket;
+
 import com.example.eventBridge_backend.error.EntityNotFoundException;
 import com.example.eventBridge_backend.payload.TicketDto;
 import com.example.eventBridge_backend.service.TicketService;
@@ -29,7 +28,7 @@ public class TicketController {
     @PostMapping("/tickets/save/{eventId}/{personId}/tickets")
     public ResponseEntity<TicketDto> createTicket(@PathVariable(value= "eventId") Long eventId,
                                                   @PathVariable("personId") Long personId,
-                                                  @RequestBody TicketDto ticketDto){
+                                                  TicketDto ticketDto){
         LOGGER.info("created a ticket" + ticketDto.getDateCreated() + " " + personId + eventId);
         return new ResponseEntity<>(ticketService.saveTicket(ticketDto, eventId, personId), HttpStatus.CREATED);
 
@@ -53,7 +52,7 @@ public class TicketController {
         return null;
     }
 
-    @GetMapping("/byPersonId/{personId}")
+    @GetMapping("tickets/byPersonId/{personId}")
     public ResponseEntity<List<TicketDto>> getTicketByPersonId(@PathVariable(name = "personId") Long personId){
         return new ResponseEntity<>(ticketService.fetchTicketByPersonId(personId),HttpStatus.OK);
     }
@@ -63,8 +62,8 @@ public class TicketController {
         return new ResponseEntity<>(ticketService.fetchTicketsByEventId(eventId),HttpStatus.OK);
     }
 //
-//    @GetMapping("/{categoryId}")
-//    public ResponseEntity<List<TicketDto>> getTicketByCategory(@RequestBody Categories categories,  @PathVariable(name = "categoryId") String categoryId){
+////    @GetMapping("/{categoryId}")
+////    public ResponseEntity<List<TicketDto>> getTicketByCategory(@RequestBody Categories categories,  @PathVariable(name = "categoryId") String categoryId){
 //        return new ResponseEntity<>(ticketService.fetchTicketsByCategory(categories),HttpStatus.OK);
 //    }
 
@@ -74,15 +73,28 @@ public class TicketController {
     }
 
     @GetMapping("/tickets/getbyIds/{personid}/{eventid}")
-    public ResponseEntity<TicketDto> getTicketByEventAndPersonId(@PathVariable("personid") Long personId, @PathVariable("eventid") Long eventId) throws EntityNotFoundException {
+    public ResponseEntity<?> getTicketByEventAndPersonId(@PathVariable("personid") Long personId, @PathVariable("eventid") Long eventId) throws EntityNotFoundException {
         try {
             return new ResponseEntity<TicketDto>(ticketService.fetchTicketByEventIdAndCustomerId(eventId, personId),HttpStatus.OK);
         } catch (EntityNotFoundException e) {
 
-           return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+           return new ResponseEntity<>("the resource wasn't found", HttpStatus.NO_CONTENT);
 //            throw new EntityNotFoundException();
         }
 
+    }
+
+    @GetMapping("/tickets/getBypersonCategory/{personid}/{category}")
+    public ResponseEntity<?> getTicketsByPersonAndCategory(@PathVariable("personid") Long personId,
+                                                                         @PathVariable("category") String category) throws EntityNotFoundException {
+        try {
+            return new ResponseEntity<>(ticketService.fetchTicketByPersonIdAndCategory(personId, category), HttpStatus.OK);
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }finally {
+            return new ResponseEntity<>("cannot find tickets by person and category", HttpStatus.NO_CONTENT);
+        }
     }
 
 

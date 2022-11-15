@@ -47,7 +47,10 @@ public class Event{
     private String endTime;
     private String summary;
     private String cost;
+
+    @Lob
     private String imgUrl;
+    private String eventType;
 
     @Embedded
     private Address address;

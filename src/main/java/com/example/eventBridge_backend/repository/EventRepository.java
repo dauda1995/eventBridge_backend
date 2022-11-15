@@ -13,5 +13,7 @@ public interface EventRepository extends JpaRepository<Event, Long> {
     public List<Event> findEventByOrganiser_PersonId(Long organiserId);
     public List<Event> findEventsByCategoriesPreference(String preference);
 
+    public List<Event> findEventsByOrganiser_PersonIdAndCategories_Preference(Long organiserId, String preference);
+
 
 }

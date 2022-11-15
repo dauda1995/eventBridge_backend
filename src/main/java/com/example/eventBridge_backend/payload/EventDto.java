@@ -26,6 +26,7 @@ public class EventDto {
     private String cost;
     private String imgUrl;
     private String organiserName;
+    private String eventType;
 
     private Address address;
     private Categories categories;

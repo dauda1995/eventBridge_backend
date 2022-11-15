@@ -128,6 +128,21 @@ public class TicketServiceImpl implements TicketService{
         return null;
     }
 
+    @Override
+    public List<TicketDto> fetchTicketByPersonIdAndCategory(Long personId, String category) {
+
+        Person person = userRepository.findById(personId).orElseThrow(
+                () -> new RuntimeException("cant find person")
+        );
+
+        List<Ticket> tickets = ticketRepository.findTicketsByCustomer_PersonIdAndEvent_Categories_Preference(personId, category);
+
+        List<TicketDto> ticketDtos = tickets.stream().map(ticket -> mapToDto(ticket)).collect(Collectors.toList());
+
+        return ticketDtos;
+
+    }
+
     public TicketDto mapToDto(Ticket ticket){
 
         TicketDto ticketDto = mapper.map(ticket, TicketDto.class);

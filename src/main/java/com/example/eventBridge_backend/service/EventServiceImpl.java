@@ -126,6 +126,15 @@ public class EventServiceImpl implements EventService{
         return eventDtos;
     }
 
+    @Override
+    public List<EventDto> fetchEventByPersonAndCategory(Long organiser, String preference) {
+        List<Event> events = eventRepository.findEventsByOrganiser_PersonIdAndCategories_Preference(organiser , preference);
+        List<EventDto> eventDtos = events.stream().map(event -> mapToDto(event)).collect(Collectors.toList());
+
+        return eventDtos;
+
+    }
+
 
     public EventDto mapToDto(Event event){
         EventDto eventDto = mapper.map(event, EventDto.class);

@@ -24,6 +24,7 @@ public class CreateEventDto {
     private double longitude;
     private String location;
     private String preference;
+
     private String eventType;
 
     public Address getAddress(){
@@ -55,6 +56,7 @@ public class CreateEventDto {
                 .imgUrl(getImgUrl())
                 .address(getAddress())
                 .categories(getCategory())
+                .eventType(getEventType())
                 .organiserName(organiserName).build();
 
 
