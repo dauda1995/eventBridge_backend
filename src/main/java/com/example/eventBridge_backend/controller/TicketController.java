@@ -4,7 +4,9 @@ import com.example.eventBridge_backend.config.Config;
 
 import com.example.eventBridge_backend.error.EntityNotFoundException;
 import com.example.eventBridge_backend.payload.TicketDto;
+import com.example.eventBridge_backend.qrcode.QRCodeGenerator;
 import com.example.eventBridge_backend.service.TicketService;
+import com.google.zxing.WriterException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +14,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
+import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
 
@@ -75,6 +79,8 @@ public class TicketController {
     @GetMapping("/tickets/getbyIds/{personid}/{eventid}")
     public ResponseEntity<?> getTicketByEventAndPersonId(@PathVariable("personid") Long personId, @PathVariable("eventid") Long eventId) throws EntityNotFoundException {
         try {
+//            LOGGER.info(ticketService.fetchTicketByEventIdAndCustomerId(eventId, personId).getTicketId());
+
             return new ResponseEntity<TicketDto>(ticketService.fetchTicketByEventIdAndCustomerId(eventId, personId),HttpStatus.OK);
         } catch (EntityNotFoundException e) {
 
@@ -84,18 +90,43 @@ public class TicketController {
 
     }
 
-    @GetMapping("/tickets/getBypersonCategory/{personid}/{category}")
-    public ResponseEntity<?> getTicketsByPersonAndCategory(@PathVariable("personid") Long personId,
-                                                                         @PathVariable("category") String category) throws EntityNotFoundException {
+    @GetMapping("/tickets/getBypersonCategory/{personId}/{category}")
+    public ResponseEntity<?> getTicketsByPersonAndCategory(@PathVariable("personId") Long personId,
+                                                                         @PathVariable("category") String category) {
         try {
             return new ResponseEntity<>(ticketService.fetchTicketByPersonIdAndCategory(personId, category), HttpStatus.OK);
         }
         catch (Exception e){
-            e.printStackTrace();
-        }finally {
             return new ResponseEntity<>("cannot find tickets by person and category", HttpStatus.NO_CONTENT);
         }
+
     }
+
+    private static final String QR_CODE_IMAGE_PATH = "./src/main/resources/static/img/QRCode.png";
+
+
+    @GetMapping("/tickets/qrcode")
+    public ResponseEntity<?> getQRCode(){
+        String medium="https://rahul26021999.medium.com/";
+        String github="https://github.com/rahul26021999";
+
+        byte[] image = new byte[0];
+
+        try{
+            image = QRCodeGenerator.getQRCodeImage(medium,250,250);
+            QRCodeGenerator.generateQRCodeImage(github,250,250,QR_CODE_IMAGE_PATH);
+
+        }catch (WriterException | IOException e){
+
+            e.printStackTrace();
+        }
+
+        String qrcode = Base64.getEncoder().encodeToString(image);
+
+        return new ResponseEntity<>(qrcode, HttpStatus.OK);
+
+    }
+
 
 
 

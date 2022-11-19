@@ -45,6 +45,8 @@ public class Event{
     private String startTime;
     private String endDate;
     private String endTime;
+
+    @Lob
     private String summary;
     private String cost;
 
