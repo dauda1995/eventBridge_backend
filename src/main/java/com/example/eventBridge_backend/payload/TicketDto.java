@@ -12,4 +12,6 @@ public class TicketDto {
     private Person customer;
     private String dateCreated;
 
+    private String qrcode;
+
 }

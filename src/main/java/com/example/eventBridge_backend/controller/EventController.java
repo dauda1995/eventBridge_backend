@@ -31,7 +31,7 @@ public class EventController {
 //    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/events/createEvent/{organiserId}/events")
 //    @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<EventDto> saveEvent(CreateEventDto createEventDto, @PathVariable("organiserId") Long organiserId){
+    public ResponseEntity<EventDto> saveEvent(@RequestBody CreateEventDto createEventDto, @PathVariable("organiserId") Long organiserId){
         LOGGER.info("inside save event" + String.valueOf(createEventDto));
         return ResponseEntity.ok(eventService.saveEvent(createEventDto.eventDto(), organiserId));
 
@@ -43,11 +43,11 @@ public class EventController {
     }
 
 //    @PreAuthorize("hasRole('ADMIN')")
-    @PutMapping("/events/{eventId}/{personId}")
+    @PutMapping("/events/update/{eventId}/")
     public ResponseEntity<EventDto> updateEvent(@PathVariable("eventId") Long eventId,
-                                                @PathVariable("personId") Long organiserId,
-                                                @RequestBody EventDto eventDt){
-        EventDto eventDto = eventService.upDateEvent(eventId, organiserId, eventDt);
+//                                                @PathVariable("personId") Long organiserId,
+                                                @RequestBody CreateEventDto eventDt){
+        EventDto eventDto = eventService.upDateEvent(eventId, eventDt.eventDto());
         return new ResponseEntity<>(eventDto, HttpStatus.OK);
     }
 
@@ -63,7 +63,7 @@ public class EventController {
     }
 
 //    @PreAuthorize("hasRole('ADMIN')")
-    @DeleteMapping("/events/{id}")
+    @DeleteMapping("/events/delete/{id}")
     public void deleteEventById(@PathVariable("id") Long eventId){
         eventService.deleteEventById(eventId);
         LOGGER.info("delete action successful");

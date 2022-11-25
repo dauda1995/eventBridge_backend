@@ -34,6 +34,8 @@ public class EventBridgeBackendApplication implements CommandLineRunner {
 //		userRole.setName("ROLE_USER");
 //		roleRepository.save(userRole);
 
+
+
 	}
 
 }

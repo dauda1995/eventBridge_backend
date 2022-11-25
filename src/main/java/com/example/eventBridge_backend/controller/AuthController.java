@@ -52,6 +52,8 @@ public class AuthController {
 //    @ApiOperation(value = "REST API to Register or Signup user to Blog app")
     @PostMapping("/signin")
     public ResponseEntity<UserResponse> authenticateUser(LoginDto loginDto){
+
+
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
                 loginDto.getFirstNameOrEmail(), loginDto.getPassword()));
 

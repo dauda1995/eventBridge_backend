@@ -83,15 +83,15 @@ public class EventServiceImpl implements EventService{
     }
 
     @Override
-    public EventDto upDateEvent(Long eventId, Long personId, EventDto eventDto) {
+    public EventDto upDateEvent(Long eventId, EventDto eventDto) {
         Event eventdb = eventRepository.findById(eventId).orElseThrow(
                 () -> new RuntimeException("cant find event to update"));
-        Person person = userRepository.findById(personId).orElseThrow(() ->
-                new RuntimeException("person not found for update"));
+//        Person person = userRepository.findById(personId).orElseThrow(() ->
+//                new RuntimeException("person not found for update"));
 
-        if(!eventdb.getOrganiser().getPersonId().equals(person.getPersonId())){
-            throw new RuntimeException("event does not belong to user");
-        }
+//        if(!eventdb.getOrganiser().getPersonId().equals(person.getPersonId())){
+//            throw new RuntimeException("event does not belong to user");
+//        }
 
             eventdb.setEventName(eventDto.getEventName());
             eventdb.setSummary(eventDto.getSummary());

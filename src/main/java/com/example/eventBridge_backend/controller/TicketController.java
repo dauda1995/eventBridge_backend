@@ -3,8 +3,11 @@ package com.example.eventBridge_backend.controller;
 import com.example.eventBridge_backend.config.Config;
 
 import com.example.eventBridge_backend.error.EntityNotFoundException;
+import com.example.eventBridge_backend.payload.EmailDetails;
 import com.example.eventBridge_backend.payload.TicketDto;
 import com.example.eventBridge_backend.qrcode.QRCodeGenerator;
+import com.example.eventBridge_backend.service.EmailService;
+import com.example.eventBridge_backend.service.EmailServiceImpl;
 import com.example.eventBridge_backend.service.TicketService;
 import com.google.zxing.WriterException;
 import org.slf4j.Logger;
@@ -26,6 +29,9 @@ public class TicketController {
 
     @Autowired
     private TicketService ticketService;
+
+    @Autowired
+    private EmailService emailService;
 
     private final Logger LOGGER = LoggerFactory.getLogger(TicketController.class);
 
@@ -105,16 +111,16 @@ public class TicketController {
     private static final String QR_CODE_IMAGE_PATH = "./src/main/resources/static/img/QRCode.png";
 
 
-    @GetMapping("/tickets/qrcode")
+    @GetMapping("/tickets/qrcode/")
     public ResponseEntity<?> getQRCode(){
         String medium="https://rahul26021999.medium.com/";
-        String github="https://github.com/rahul26021999";
+//        String github="https://github.com/rahul26021999";
 
         byte[] image = new byte[0];
 
         try{
             image = QRCodeGenerator.getQRCodeImage(medium,250,250);
-            QRCodeGenerator.generateQRCodeImage(github,250,250,QR_CODE_IMAGE_PATH);
+           //QRCodeGenerator.generateQRCodeImage(github,250,250,QR_CODE_IMAGE_PATH);
 
         }catch (WriterException | IOException e){
 
@@ -123,8 +129,17 @@ public class TicketController {
 
         String qrcode = Base64.getEncoder().encodeToString(image);
 
+//        emailService.sendMailWithInlineResources("dauda933@gmail.com", "my name", null);
+
         return new ResponseEntity<>(qrcode, HttpStatus.OK);
 
+    }
+
+    @PostMapping("/sendMail")
+    public String sendEmail(@RequestBody EmailDetails details){
+        String status = emailService.sendSimpleMail(details);
+
+        return status;
     }
 
 

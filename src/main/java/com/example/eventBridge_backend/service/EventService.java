@@ -15,7 +15,7 @@ public interface EventService {
 
     public void deleteEventById(Long eventId);
 
-    EventDto upDateEvent(Long eventId, Long personId, EventDto event);
+    EventDto upDateEvent(Long eventId, EventDto event);
 
     List<EventDto> fetchEventByOrganiserId(Long organiserId);
 

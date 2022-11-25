@@ -3,14 +3,18 @@ package com.example.eventBridge_backend.service;
 import com.example.eventBridge_backend.entity.*;
 import com.example.eventBridge_backend.error.EntityNotFoundException;
 import com.example.eventBridge_backend.payload.TicketDto;
+import com.example.eventBridge_backend.qrcode.QRCodeGenerator;
 import com.example.eventBridge_backend.repository.EventRepository;
 import com.example.eventBridge_backend.repository.TicketRepository;
 import com.example.eventBridge_backend.repository.UserRepository;
+import com.google.zxing.WriterException;
 import org.modelmapper.ModelMapper;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
+import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -105,7 +109,20 @@ public class TicketServiceImpl implements TicketService{
 
 //            LoggerFactory.getLogger("kokmental").info(ticket.get().getDateCreated() + " the ticket id");
             TicketDto ticketDto = mapToDto(ticket);
-            return ticketDto;
+        byte[] image = new byte[0];
+
+        String qrstring = "eventname: " +ticketDto.getEvent().getEventName() + "\n" +
+        "customerId: " + ticketDto.getCustomer().getEmail() + "\n " + ticketDto.getTicketId();
+
+        try{
+            image = QRCodeGenerator.getQRCodeImage(qrstring,250,250);
+        }catch (WriterException | IOException e){
+            e.printStackTrace();
+        }
+        String qrcode = Base64.getEncoder().encodeToString(image);
+
+        ticketDto.setQrcode(qrcode);
+        return ticketDto;
 //        }
     }
 //
