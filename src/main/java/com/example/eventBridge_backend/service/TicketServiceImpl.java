@@ -112,7 +112,8 @@ public class TicketServiceImpl implements TicketService{
         byte[] image = new byte[0];
 
         String qrstring = "eventname: " +ticketDto.getEvent().getEventName() + "\n" +
-        "customerId: " + ticketDto.getCustomer().getEmail() + "\n " + ticketDto.getTicketId();
+        "customerId: " + ticketDto.getCustomer().getEmail() + "\n " + ticketDto.getTicketId() +
+                "\n  event date: " + ticketDto.getEvent().getStartDate() + "\n " + ticketDto.getEvent().getAddress().getCity();
 
         try{
             image = QRCodeGenerator.getQRCodeImage(qrstring,250,250);
